@@ -23,46 +23,102 @@
 
 \section*{Magic Bus}
 \subsection*{1. Number of Permutations}
-sdads
+\begin{table}[!h!p]
+\begin{center}
+\begin{tabular}{l l}
+\hline
+\textbf{Number of orders} & \textbf{Number of route permutations} \\ \hline \hline
+1 & 1 \\ \hline
+2 & 6 \\ \hline
+3 & 90 \\ \hline
+4 & 2520 \\ \hline
+5 & 113400 \\ \hline
+6 & 7484400 \\ \hline
+7 & 681080400 \\ \hline
+8 & 81729648000 \\ \hline
+9 & 12504636144000 \\ \hline
+10 & 2375880867360000 \\ 
+\hline\hline
+\end{tabular}
+\end{center}
+\end{table}
+
  
 \subsection*{2. Branching factor limits}
-dsadsa
+Since each operation drops off at least one passenger and/or picks up at least one, the branching factor $b$ can be thought of as the number of (distinct) locations where a passenger is awaiting pickup, or that location is a destination for a passenger onboard the bus.
+Thus, the limits of the branching factors are
+\begin{itemize}
+\item The maximum branching factor is $k$, and occurs for example at the initial state (when all passengers are in distinct source locations). It isn't possible to have a higher value, since there are only $k$ passengers
+\item The minimal branching factor is $1$, when we only have the last passenger to drop off (again, assuming they're the only passenger to reach that destination). There couldn't be a lower value, since a Goal State is defined that way. (Or a dead end, but we'll get to that)
+\end{itemize}
+
+Thus, $1 \leq b \leq k$
 
 \subsection*{3. Is the graph circular}
-dsadsa
+The graph can't have any circles, since once we pick up a passenger, we can't pick them up ever again (and the same for dropping off). This can also be thought of mathemtically - we have $2k$ locations to pass through - thats a finite route length.
+
+\textbf{Note:} we can have circles in our orders - two passengers with reversed destinations and sources. However, this question refers to the State Space, which comprises also of the current state of each passenger.
 
 \subsection*{4. Definition of Goal States}
-dsadsa
+Goal states are defined by all passengers having arrived to their destination, the last of them arriving at the location of the goal state.
+Formally,
+$$
+G = \left\{ (v, W, B, F) | W=B=\emptyset, F=[k], v\in T  \right\}
+$$
 
 \subsection*{5. Number of Goal States}
-dsadsa
+Assuming all order locations are distinct, we will have exactly $k$ goal states - the last drop off of each passenger.
+This follows from the previous section, since all that matters is $v \in T$
 
 \subsection*{6. Dead-Ends in graph}
-dsadsa
+As discussed in section 3, the route length is constrained, and on each step we decrement the number of locations left to visit.  Thus, we will always reach a state where there are $0$ passengers on the bus, and all passengers are at their destionation.
 
 \subsection*{7. The \textbf{Successor} function}
-dsadsa
+\begin{equation}
+Succ\left((v_1, W_1, B_1, F_1)\right) =  \left\{ 
+	(v_2, W_2, B_2, F_2) \\  \vline \\ 
+  \begin{aligned}
+  & W_2 = W_1 \setminus \{i | s_i = v_2\} \\ 
+  & B_2 = B_1 \cup (W_2 \setminus W_1) \setminus  \{i | t_i = v_2\} \\ 
+  & F_2 = F_1 \cup (B_2 \setminus B_1) \\
+  & v_2 \in \{s_i | i \in W_1 \} \cup \{t_i | i\in B_1\}
+  \end{aligned}
+\right\}
+\end{equation}
 
 \subsection*{8. Goal state depth limits}
-dsadsa
+Since we have to pass through $2k$ different locations to pick up and drop off each passenger, and with each succession we only (half-way) take care of one passenger, all goal states will be at depth $2k$.
 
 \subsection*{9. Initial Experiment}
-dsadsa
+One of the orders is from junction \#23695 at (32.1022894, 34.9882995) to \#33320 at (32.0926573, 35.1022635) \\ 
+A lower bound on the distance we need to drive for this order is: 10.78km \\ 
+Path length: 161.11km \\ 
+\\ 
+Path.getDistance uses a list comprehension to extract the distance of each link in the path, and sums them
 
 \subsection*{10. Problem Verification Experiment}
-dsadsa
+Junction idx: \#851288 \\ 
+waiting for bus: [(23695, 33320)] \\ 
+orders on bus: [(32056, 834603), (851288, 533396)] \\ 
+finished orders: [(47521, 606430), (466524, 29249)] \\
+Is goal? False
 
 \subsection*{A*}
 \subsubsection*{11. A* Experiment}
 dsadsa
 
 \subsubsection*{12. Conclusions on the sum of routes}
-dsadsa
+dsakldnaslk \\ 
+
+not minimal – if all in same place…  \\
+probably not maximal – if all different, it doesn’t count $t+i->s_i+1$ \\
+
+dsakldsal \\
 
 \subsection*{Greedy Algorithm}
 \subsubsection*{13. Greedy Algorithm Experiment}
 dsadsa
-\begin{table}[!h!p]
+\begin{table}[]
 \begin{center}
 \begin{tabular}{l l}
 \hline
@@ -77,23 +133,49 @@ BEER\_SHEVA\_100 & dsadsa \\
 \end{table}
 
 \subsubsection*{14. Number of expanded junctions limits}
-dsadsa
+Without any knowledge on the scoring function, we would have to limit the number of junctions using the trivial constraints
+\begin{itemize}
+\item The maximal number is still $2k$
+\item Since we don't have the distinct location constraint anymore, in the rare case all passengers originate from the same location and travel to the same destination, we will only call the successor function twice!
+\end{itemize}
 
 \subsubsection*{15. Space Complexity of Greedy Algorithm}
-dsadsa
+Assuming the scoring function requires $O(1)$ space, then the only thing stored is the path saved as $pickingOrder$. Thus, in the case where we expand the maximal number of junctions, the algorithm would require $O(k)$ space
 
 \subsection*{Stochastic Algorithm}
 \subsubsection*{16. Proof of Indifference to scaling}
-dsadsa
+Looking at the best $N$ points, their probabilities would be
+$$
+	p = \frac {\left(\frac {x_i}{\alpha}\right)^{-\frac{1}{T}}} {\sum_{N-best} {\left(\frac {x_i}{\alpha}\right)^{-\frac{1}{T}}}}
+$$
+
+since $\alpha$ is a constant (equal to $ \min x_i $, but still constant in the context of this equation):
+$$
+	p = \frac {\frac {1}{\alpha}\cdot x_i^{-\frac{1}{T}}} {\frac {1}{\alpha}\cdot \sum_{N-best} {x_i^{-\frac{1}{T}}}} = \frac {x_i^{-\frac{1}{T}}} {\sum_{N-best} {x_i^{-\frac{1}{T}}}}
+$$
+
+which is just the original, unnormalized probability!s
 
 \subsubsection*{17. Temprature Experiment}
 dsadsa
 
-\subsubsection*{18. Implications of $T -> 0$}
-dsadsa
+\subsubsection*{18. Implications of $T \rightarrow 0$}
+In this case, the algorithm would be conservative and choose (almost determinstically - this would happen when $T=0$) the best score each time - as did the greedy algorithm!
+This is implied by the normalized scoring function - the expression  $(\frac {x_i}{\alpha})^{-\frac{1}{T}}$ would become
+$$
+	\lim_{T \rightarrow 0} \left(\frac {x_i}{\alpha}\right)^{-\frac{1}{T}} = (\frac {x_i}{\alpha})^{-\infty}
+$$
 
-\subsubsection*{19. Implications of $T -> \infty$}
-dsadsa
+The original lowest value will have $\frac {x_i}{\alpha} = 1$, while all other values will have either $0$, or a quantity larger than $1$, thus the power would zero them out --- making the choice the lowest value!
+
+\subsubsection*{19. Implications of $T \rightarrow \infty$}
+In this case, the algorithm wouldn't be much of an algorithm, and choose arbitrarly.
+This is implied by the scoring function - the expression  $(\frac {x_i}{\alpha})^{-\frac{1}{T}}$ would become
+$$
+	\lim_{T \rightarrow \infty} (x_i)^{-\frac{1}{T}} = x_i^0 = 1
+$$
+
+This would make the score of each of the best $N$ points to the equal to $\frac {1} {N}$, Thus making the algorithm choose completely randomly!
 
 \subsubsection*{20. Stochastic Algorithm Experiment}
 dsadsa
