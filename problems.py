@@ -56,7 +56,8 @@ class MapProblem(Problem):
 
     def expand(self, state):
         for l in self._roads[state.junctionIdx].links:
-            yield MapState(l.target, self._roads[state.junctionIdx].coordinates)
+            yield MapState(l.target, self._roads[l.target].coordinates)
+            # changed  by email- yield MapState(l.target, self._roads[state.junctionIdx].coordinates)
 
     def isGoal(self, state):
         return state.junctionIdx == self.target.junctionIdx
