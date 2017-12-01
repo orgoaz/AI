@@ -193,24 +193,63 @@ dsadsa
 \subsubsection*{24. Comparison of Heuristics}
 dsadsa
 
-\subsubsection*{25. Using an acceptable Heuristic}
+\subsubsection*{25. Using an admissable Heuristic}
 dsadsa
 
 \subsubsection*{26. Using an advanced Heuristic}
 dsadsa
 
 \section {Theory}
-\subsection*{Proof of transitive acceptance}
-dsadsa
+\subsection*{Proof of transitive admissability}
+The condition for a heursitic to be admissable is that 
+$$ 0 \leq h \leq h^* $$
+Assuming that is true for $h$ (for the states where it is defined), we can check if $h_0$ is admissable by its definition: \\ 
+For any state $s$:
+\begin{itemize}
+\item if $h$ is defined for $s$, then $h_0(h,s) = h(s)$, yielding $h_0(h,s) \leq h^*(s) $
+\item if $h$ is not defined for $s$, then $h_0(h,s) = 0$, thus still holding that $  h_0(h,s) = 0 \leq h^*(s) $
+\end{itemize}
+
+\textbf{Note: } of course, $0 \leq h_0$, since $h$ is admissable. \\ \\
+
+Thus, we can conclude that $ h\ is\ addmissable \rightarrow h_0\ is\ addmissable $
 
 \subsection*{A better heuristic under the assumption of a Tree-Graph}
-dsadsa
+We will use Uniform-cost in cases where the partial heuristic function $h$ is not defined, to try and find a goal state
+\[
+  h_{tree}(h,s)=\begin{cases}
+               h(s) \ \ \ \ \  Applicable_h(s) \\
+               \Delta \ \ \ \ \ \ \ \  \  Uniform-Cost\ found\ goal\ state\ at\ (relative)\ cost\ \Delta
+            \end{cases}
+\]
+
+This heuristic is admissable since
+\begin{itemize}
+\item the first case is exactly as it were previously
+\item Uniform cost is optimal, hence $\Delta = h^* $
+\end{itemize}
+\ 
+
+It is obvious that $h_{tree}$ is more informed, since it is equal to $h$ in the first case, and higher is the second.
+\\~\\
+\textbf{Note: } We are using the weaker constraint, only since the question isn't possible to answer using the usual constraint --- since $h$ may be optimal when defined.
+\\~\\
+
+The pseudo-code for this heuristic is:
+dsakhjdsakhdjksahdksjahkdjshdkjsahdkjsah dsankjsdanhkjdasnkn
 
 \subsection*{A generic better heuristic!}
-dsadsa
+Actually, the previous heuristic still works, since we know the cost function has a positive minimal constraint.
+\\~\\
+\textbf{Note: } Since we used the same heuristic in both answers, to be fair --- we could have used another heuristic that returns $\delta$ (the minimum constraint) when $h$ is not defined and $s$ is not a goal state (in both cases, as well)
 
-\subsection*{Using a perfect (but limited) heuristic to create an acceptable heuristic}
-dsadsa
+\subsection*{Using a perfect (but limited) heuristic to create an admissable heuristic}
+As we learned in the lecture, using a perfect heuristic --- $A*$ is an optimal algorithm, and no algorithm exists that can perform better.\ 
+When using a heuristic such as $h_0$, where all non-start states have the same value, $A*$ behaves like Uniform-Cost. (Especially since $h=0$ meaning $f=g+h=g$)
+\\~\\
+Thus, Since $A*$ doesn't know that the heuristic is partial (but optimal for the initial state) --- we can use that for our advantage, by using Uniform-Cost with an upper bound - $h(s_i)$. This algorithm will not open states where $h(s_i) <= g(s)$.
+\\~\\
+This algorithm is an improvement over $A*$ because Unlike usual Uniform-Cost search, it knows the goal value, so once it reaches a state with that cost it can stop (less runtime). On the other hand, $A*$/Uniform-Cost would need to open all states with that cost before it can halt.
 
 
 \end{document}
