@@ -50,21 +50,56 @@ class AStar:
         open_set = {source: self.heuristic.estimate(problem, problem.initialState)}
 
         developed = 0
+        while open_set != {}:
+            next = self._getOpenStateWithLowest_f_score(open_set)[0]
+            closed_set.add(next)
+            if problem.target.junctionIdx == next.junctionIdx:
+                result = (self._reconstructPath(parents, problem.target) , g_score[problem.target], source, developed)
+                self._storeInCache(problem, result)
+                return result
+            for s in problem.expandWithCosts(next, self.cost):
+                developed+=1
+                new_g = g_score[next] + problem._calculateCost(next, s[0])
+                if open_set.__contains__(s[0]):
+                    old_node = s[0]
+                else:
+                    old_node = None
+                if old_node:
+                    if new_g <  g_score[old_node]:
+                        g_score[old_node] = new_g
+                        parents[old_node]=next
+                        open_set[old_node] =  g_score[old_node] + self.heuristic.estimate(problem, old_node)
+                else:
+                    if closed_set.__contains__(s[0]):
+                        old_node = s[0]
+                    else:
+                        old_node=None
+                    if old_node:
+                        if new_g <  g_score[old_node]:
+                            g_score[old_node] = new_g
+                            parents[old_node] = next
+                            closed_set.remove(old_node)
+                            open_set[old_node] = g_score[old_node] + self.heuristic.estimate(problem, old_node)
+                    else:
+                        parents[s[0]] = next
+                        g_score[s[0]] = new_g
+                        open_set[s[0]] = new_g + self.heuristic.estimate(problem, s[0])
 
-        # TODO : Implement astar.
-        # Tips:
-        # - To get the successor states of a state with their costs, use: problem.expandWithCosts(state, self.cost)
-        # - You should break your code into methods (two such stubs are written below)
+        raise ValueError('No Path Found - I worked for nothing :(')
+
         # - Don't forget to cache your result between returning it - TODO
 
-        # TODO : VERY IMPORTANT: must return a tuple of (path, g_score(goal), h(I), developed)
-        return ([], -1, -1, developed)
-
     def _getOpenStateWithLowest_f_score(self, open_set):
-        # TODO : Implement
-        raise NotImplementedError
+        stateWithLowestF = min(open_set.items(), key=lambda x: x[1])
+        open_set.pop(stateWithLowestF[0])
+        return stateWithLowestF
 
     # Reconstruct the path from a given goal by its parent and so on
     def _reconstructPath(self, parents, goal):
-        # TODO : Implement
-        raise NotImplementedError
+        path =[goal]
+        currentStep = goal
+        while parents.__contains__(currentStep):
+            currentStep = parents[currentStep]
+            path.append(currentStep)
+
+        return list(reversed(path))

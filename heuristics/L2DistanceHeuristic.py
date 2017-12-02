@@ -5,5 +5,5 @@ from ways.tools import compute_distance
 class L2DistanceHeuristic(Heuristic):
     def estimate(self, problem, state):
         # TODO : Return the correct distance
-        return compute_distance(problem.target, state)
+        return compute_distance(problem.target.coordinates, state.coordinates)
 

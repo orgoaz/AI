@@ -88,10 +88,6 @@ class BusProblem(Problem):
 
     # Get the new state created after going from one state to a new location (on map)
     def _getNewStateAtLoc(self, previousState, newLoc):
-        # TODO : Implement
-        newWaiting = []
-        newOnBus = []
-        newFinished = []
 
         pickedUp = [o for o in previousState.waitingOrders if o[0] == newLoc]
         droppedOff = [o for o in previousState.ordersOnBus if o[1] == newLoc]
