@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 
+
 \begin{document}
 
 \title{%
@@ -195,6 +196,17 @@ dsadsa
 \begin{itemize}
 \item $h_c$ - because in the case where we have only one passenger left $(s_j, t_j)$, but we are at a junction very close to $t_j$, this heuristic would overshoot the optimal heuristic since it estimates the distance to a goal state by the aerial distance from that passengers source location to their destination. (and that passenger is already onboard the bus)
 
+\item $h_g$ - although very similar to $h_b$, because the graph is directional - the actual distance from $s_1$ to $t_2$ (where $h_g = d_{A^*}(s_1, t_2)$) may be well over the distance needed to travel through \textbf{all} junctions in the orders. \\~\\
+For example, if the route would be $ s_2 \rightarrow t_2 \rightarrow s_1 \rightarrow t_1 $, while a route exists between $ s_1 \rightarrow t_2 $, but \textbf{not} $ t_1 \rightarrow s_2 $, all with the following weights:
+$$
+	(s_2, t_2) = (t_2, s_1) = (s_1, t_1) = \delta
+$$
+$$
+	(s_1, t_2) = 10\cdot \delta
+$$
+
+In such a case, our route (starting at $s_2$) would cost $3\cdot \delta$, while the heuristic would be $h_g = d(s_1, t_2) = 10\cdot \delta$ - meaning the heuristic is not admissable!
+
 \end{itemize}
 
 \subsubsection*{Admissable Heuristics}
@@ -225,9 +237,7 @@ If our current location is between their source and destination, it is obvious t
 Otherwise, even if we have an aerial distance route from our current location, through they position, and then to the destination - it would still be the same as the real distance. \\~\\
 In the more general case, we have to get to our farthest away passenger awaiting pickup, and to drop off the passenger we haven't picked up yet who has to travel the longest, so this heuristic is indeed admissable!
 
-\item $h_f$ - of course, since it is similar to $h_a$, only that it uses the real distance. (same argument - we still have to pick them up...)
-
-\item $h_g$ - again, same as $h_b$, only the distances are real this time. (Vector calculus etc)
+\item $h_f$ - of course, since it is similar to $h_a$, only that it uses the real distance. (this is even though we are considering real distances in a directional graph - since we have to travel that distance from a passengers origin to their destionation in order to complete all orders)
 
 \end{itemize}
 
@@ -237,10 +247,9 @@ Assuming \textbf{non-strict} admissability, we can conclude that
 	\item $h_b$ is more informed than $h_a$ since it acknowledges multiple passengers, and in the case where there is only a single passenger left it is equal to it.
 	\item $h_e$ is more informed than $h_a, h_d$, since it is their addition (so $h_a, h_d < h_e \leq h^*$)
 	\item $h_f$ is more informed than $h_a$, since it uses real distances instead of estimates
-	\item $h_g$ is more informed than $h_b$, since it uses real distances instead of estimates. Similarly to $h_b, h_a$, it is also more informed than $h_f$
 \end{itemize}
 
-\textbf{Note:} If we were to address \textbf{strict} admissability, since the case that there is only one passenger left to pickup $h_a = h_b$, and in the case that the real distances are aerial distances $h_a = h_f, h_b = h_g$ (and transetively in both cases $h_a = h_g$), the only better informed heursitic would be $h_e$ over all the others (since we have to pick them up ($(s_i,  t_i) \in s.W$) and the invarient that $s_i \neq t_i$
+\textbf{Note:} If we were to address \textbf{strict} admissability, since the case that there is only one passenger left to pickup $h_a = h_b$, and in the case that the real distances are aerial distances $h_a = h_f$ (and transetively in both cases $h_a = h_f$), the only better informed heursitic would be $h_e$ over all the others (since we have to pick the passenger up ($(s_i,  t_i) \in s.W$) and the invarient that $s_i \neq t_i$
 
 \subsubsection*{25. Using an admissable Heuristic}
 dsadsa
@@ -248,7 +257,7 @@ dsadsa
 \subsubsection*{26. Using an advanced Heuristic}
 dsadsa
 
-\section {Theory}
+\section*{Theory}
 \subsection*{Proof of transitive admissability}
 The condition for a heursitic to be admissable is that 
 $$ 0 \leq h \leq h^* $$
@@ -283,9 +292,6 @@ It is obvious that $h_{tree}$ is more informed, since it is equal to $h$ in the 
 \\~\\
 \textbf{Note: } We are using the weaker constraint, only since the question isn't possible to answer using the usual constraint --- since $h$ may be optimal when defined.
 \\~\\
-
-The pseudo-code for this heuristic is:
-dsakhjdsakhdjksahdksjahkdjshdkjsahdkjsah dsankjsdanhkjdasnkn
 
 \subsection*{A generic better heuristic!}
 Actually, the previous heuristic still works, since we know the cost function has a positive minimal constraint.
