@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.getcwd())
+
 from consts import Consts
 from ways import load_map_from_csv
 from problems import BusProblem
