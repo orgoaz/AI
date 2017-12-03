@@ -53,27 +53,22 @@ class AStar:
         while open_set != {}:
             next = self._getOpenStateWithLowest_f_score(open_set)[0]
             closed_set.add(next)
-            if problem.target.junctionIdx == next.junctionIdx:
-                result = (self._reconstructPath(parents, problem.target) , g_score[problem.target], source, developed)
+            if problem.isGoal(next):
+                result = (self._reconstructPath(parents, next) , g_score[next], source, developed)
                 self._storeInCache(problem, result)
                 return result
-            for s in problem.expandWithCosts(next, self.cost):
-                developed+=1
-                new_g = g_score[next] + problem._calculateCost(next, s[0])
-                if open_set.__contains__(s[0]):
-                    old_node = s[0]
-                else:
-                    old_node = None
+            for s,c in problem.expandWithCosts(next, self.cost):
+                developed += 1
+                new_g = g_score[next] + c
+                old_node = open_set.get(s)
+
                 if old_node:
-                    if new_g <  g_score[old_node]:
+                    if new_g < g_score[old_node]:
                         g_score[old_node] = new_g
-                        parents[old_node]=next
-                        open_set[old_node] =  g_score[old_node] + self.heuristic.estimate(problem, old_node)
+                        parents[old_node] = next
+                        open_set[old_node] = g_score[old_node] + self.heuristic.estimate(problem, old_node)
                 else:
-                    if closed_set.__contains__(s[0]):
-                        old_node = s[0]
-                    else:
-                        old_node=None
+                    old_node = s if closed_set.__contains__(s) else None
                     if old_node:
                         if new_g <  g_score[old_node]:
                             g_score[old_node] = new_g
@@ -81,9 +76,9 @@ class AStar:
                             closed_set.remove(old_node)
                             open_set[old_node] = g_score[old_node] + self.heuristic.estimate(problem, old_node)
                     else:
-                        parents[s[0]] = next
-                        g_score[s[0]] = new_g
-                        open_set[s[0]] = new_g + self.heuristic.estimate(problem, s[0])
+                        parents[s] = next
+                        g_score[s] = new_g
+                        open_set[s] = new_g + self.heuristic.estimate(problem, s)
 
         raise ValueError('No Path Found - I worked for nothing :(')
 
