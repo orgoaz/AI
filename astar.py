@@ -48,13 +48,16 @@ class AStar:
         # Save the g_score and f_score for the open nodes
         g_score = {source: 0}
         open_set = {source: self.heuristic.estimate(problem, problem.initialState)}
+        hi = open_set[source]
 
         developed = 0
         while open_set != {}:
             next = self._getOpenStateWithLowest_f_score(open_set)[0]
             closed_set.add(next)
             if problem.isGoal(next):
-                result = (self._reconstructPath(parents, next) , g_score[next], source, developed)
+                path = self._reconstructPath(parents, next)
+                result = (path, g_score[next], hi, developed)
+
                 self._storeInCache(problem, result)
                 return result
             for s,c in problem.expandWithCosts(next, self.cost):
@@ -62,26 +65,22 @@ class AStar:
                 new_g = g_score[next] + c
                 new_h = self.heuristic.estimate(problem, s)
                 new_f = new_g + new_h
-                old_node = s if open_set.__contains__(s) else None
 
-                if old_node:
-                    if new_g < g_score[old_node]:
-                        g_score[old_node] = new_g
-                        parents[old_node] = next
-                        open_set[old_node] = new_f
-                else:
-                    old_node = s if closed_set.__contains__(s) else None
-                    if old_node:
-                        if new_g <  g_score[old_node]:
-                            g_score[old_node] = new_g
-                            parents[old_node] = next
-                            open_set[old_node] = new_f
-                            
-                            closed_set.remove(old_node)
-                    else:
+                is_open = open_set.__contains__(s)
+                is_closed = closed_set.__contains__(s)
+
+                if is_open or is_closed:
+                    if new_g < g_score[s]:
                         g_score[s] = new_g
                         parents[s] = next
                         open_set[s] = new_f
+
+                        if is_closed:
+                            closed_set.remove(s)                            
+                else:
+                    g_score[s] = new_g
+                    parents[s] = next
+                    open_set[s] = new_f
 
         raise ValueError('No Path Found - I worked for nothing :(')
 
