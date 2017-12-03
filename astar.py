@@ -60,25 +60,28 @@ class AStar:
             for s,c in problem.expandWithCosts(next, self.cost):
                 developed += 1
                 new_g = g_score[next] + c
-                old_node = open_set.get(s)
+                new_h = self.heuristic.estimate(problem, s)
+                new_f = new_g + new_h
+                old_node = s if open_set.__contains__(s) else None
 
                 if old_node:
                     if new_g < g_score[old_node]:
                         g_score[old_node] = new_g
                         parents[old_node] = next
-                        open_set[old_node] = g_score[old_node] + self.heuristic.estimate(problem, old_node)
+                        open_set[old_node] = new_f
                 else:
                     old_node = s if closed_set.__contains__(s) else None
                     if old_node:
                         if new_g <  g_score[old_node]:
                             g_score[old_node] = new_g
                             parents[old_node] = next
+                            open_set[old_node] = new_f
+                            
                             closed_set.remove(old_node)
-                            open_set[old_node] = g_score[old_node] + self.heuristic.estimate(problem, old_node)
                     else:
-                        parents[s] = next
                         g_score[s] = new_g
-                        open_set[s] = new_g + self.heuristic.estimate(problem, s)
+                        parents[s] = next
+                        open_set[s] = new_f
 
         raise ValueError('No Path Found - I worked for nothing :(')
 
