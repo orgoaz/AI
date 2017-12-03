@@ -1,9 +1,9 @@
 import numpy as np
+import random
 from matplotlib import pyplot as plt
 
 N = 5
-X = np.array([550, 400,900,390,1000])
-X = X[X.argsort()[:N]]
+X = np.array([400,900,390,1000,550])
 
 alpha = np.min(X)
 Xh = X / alpha
@@ -19,6 +19,8 @@ P /= denom[:,None]
 plt.plot(P)
 axes = plt.gca()
 axes.set_xticklabels(range(N+1))
+axes.set_xlabel("T")
+axes.set_ylabel("P")
 axes.set_xlim([0,100])
 axes.set_ylim([0,1])
 plt.legend(X, loc="upper right")
