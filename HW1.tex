@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 
+
 \begin{document}
 
 \title{%
@@ -185,13 +186,70 @@ dsadsa
 
 \subsection*{A* (Again)}
 \subsubsection*{22. Number of routes to \emph{any} Goal State}
-dsadsa
+Since there are $5$ orders in this problem set, we can use the table we calculated in Q1 in order to see that there are $113400$ different routes from the initial state to \textbf{a} goal state, since these routes are determined by all the possible permutations of junctions we visit.
 
 \subsubsection*{23. Bus A* Experiment}
 dsadsa
 
 \subsubsection*{24. Comparison of Heuristics}
-dsadsa
+\subsubsection*{Non Admissable Heuristics}
+\begin{itemize}
+\item $h_c$ - because in the case where we have only one passenger left $(s_j, t_j)$, but we are at a junction very close to $t_j$, this heuristic would overshoot the optimal heuristic since it estimates the distance to a goal state by the aerial distance from that passengers source location to their destination. (and that passenger is already onboard the bus)
+
+\item $h_g$ - although very similar to $h_b$, because the graph is directional - the actual distance from $s_1$ to $t_2$ (where $h_g = d_{A^*}(s_1, t_2)$) may be well over the distance needed to travel through \textbf{all} junctions in the orders. \\~\\
+For example, if the route would be $ s_2 \rightarrow t_2 \rightarrow s_1 \rightarrow t_1 $, while a route exists between $ s_1 \rightarrow t_2 $, but \textbf{not} $ t_1 \rightarrow s_2 $, all with the following weights:
+$$
+	(s_2, t_2) = (t_2, s_1) = (s_1, t_1) = \delta
+$$
+$$
+	(s_1, t_2) = 10\cdot \delta
+$$
+
+In such a case, our route (starting at $s_2$) would cost $3\cdot \delta$, while the heuristic would be $h_g = d(s_1, t_2) = 10\cdot \delta$ - meaning the heuristic is not admissable!
+
+\end{itemize}
+
+\subsubsection*{Admissable Heuristics}
+\begin{itemize}
+\item $h_a$ since it estimates the distance to a goal state by the largest aerial distance needed to transfer a passenger we haven't picked up yet from their location to their destination. If we were at their location, this would be a lower bound to the real distance to a goal state. Otherwise, we would also need to go and pick them up.
+
+\item $h_b$ since it estimates the distance to a goal state by the largest aerial distance needed to transfer a passenger we haven't picked up yet to the destination of another passenger we haven't picked up yet. It is admissable because in the case we have two passengers, we would have three paths of action: \emph{Assuming 1 is closest to our location by real distance}
+$$
+	1. Pick up 1 \rightarrow Pick up 2 \rightarrow Drop off closest \rightarrow Drop off other
+$$
+$$
+	2. Pick up 1 \rightarrow Pick up 2 \rightarrow Drop off farthest \rightarrow Drop off other
+$$
+$$
+	3. Pick up 1 \rightarrow Drop off 1  \rightarrow Pick up 2 \rightarrow Drop off 2
+$$
+For case \#1 In the case where the drop off of \#2 is the closest, we would go through $s_1 \rightarrow s_2\rightarrow t_2 \rightarrow t_1$, which is bounded by $h_c = \max (s_1\rightarrow t_2, s_2 \rightarrow t_1)$ since we do a roundtrip through these points (vector calculus). In the case where it is closer to drop off \#1, we would go through $s_1 \rightarrow s_2 \rightarrow t_1 \rightarrow t_2$, which would imply the same. \\~\\
+For case \#2 - everything is similar to the previous case, only the paths are vice versa. \\~\\
+For case \#3, our route would include $t_1 \rightarrow s_2$, which is also $h_c$. \\~\\
+\textbf{Note:} and if we have only one passenger, $h_b = h_a$
+
+\item $h_d$ since it estimates the distance to a goal state by the largest aerial distance needed to get to a passenger we haven't picked up yet from our current location. Even if they are the last passenger left, we still have to go to their  location to pick them up, then travel to the destination. \\~\\
+If our current location is between their source and destination, it is obvious that the optimal heuristic would be larger than this value. \ 
+Otherwise, even if we have an aerial distance route from our current location, through they position, and then to the destination - it would still be the same as the real distance.
+
+\item $h_e$ since it estimates the distance to a goal state by the largest aerial distance needed to get to a passenger we haven't picked up yet from our current location, and the largest aerial distance needed to transfer a passenger we haven't picked up yet to their destination. Even if these is a single passenger left, we still have to go to their  location to pick them up, then travel to the destination. \\~\\
+If our current location is between their source and destination, it is obvious that the optimal heuristic would be larger than this value. \ 
+Otherwise, even if we have an aerial distance route from our current location, through they position, and then to the destination - it would still be the same as the real distance. \\~\\
+In the more general case, we have to get to our farthest away passenger awaiting pickup, and to drop off the passenger we haven't picked up yet who has to travel the longest, so this heuristic is indeed admissable!
+
+\item $h_f$ - of course, since it is similar to $h_a$, only that it uses the real distance. (this is even though we are considering real distances in a directional graph - since we have to travel that distance from a passengers origin to their destionation in order to complete all orders)
+
+\end{itemize}
+
+\subsubsection*{Comparison of Admissable Heuristics}
+Assuming \textbf{non-strict} admissability, we can conclude that
+\begin{itemize}
+	\item $h_b$ is more informed than $h_a$ since it acknowledges multiple passengers, and in the case where there is only a single passenger left it is equal to it.
+	\item $h_e$ is more informed than $h_a, h_d$, since it is their addition (so $h_a, h_d < h_e \leq h^*$)
+	\item $h_f$ is more informed than $h_a$, since it uses real distances instead of estimates
+\end{itemize}
+
+\textbf{Note:} If we were to address \textbf{strict} admissability, since the case that there is only one passenger left to pickup $h_a = h_b$, and in the case that the real distances are aerial distances $h_a = h_f$ (and transetively in both cases $h_a = h_f$), the only better informed heursitic would be $h_e$ over all the others (since we have to pick the passenger up ($(s_i,  t_i) \in s.W$) and the invarient that $s_i \neq t_i$
 
 \subsubsection*{25. Using an admissable Heuristic}
 dsadsa
@@ -199,7 +257,7 @@ dsadsa
 \subsubsection*{26. Using an advanced Heuristic}
 dsadsa
 
-\section {Theory}
+\section*{Theory}
 \subsection*{Proof of transitive admissability}
 The condition for a heursitic to be admissable is that 
 $$ 0 \leq h \leq h^* $$
@@ -234,9 +292,6 @@ It is obvious that $h_{tree}$ is more informed, since it is equal to $h$ in the 
 \\~\\
 \textbf{Note: } We are using the weaker constraint, only since the question isn't possible to answer using the usual constraint --- since $h$ may be optimal when defined.
 \\~\\
-
-The pseudo-code for this heuristic is:
-dsakhjdsakhdjksahdksjahkdjshdkjsahdkjsah dsankjsdanhkjdasnkn
 
 \subsection*{A generic better heuristic!}
 Actually, the previous heuristic still works, since we know the cost function has a positive minimal constraint.

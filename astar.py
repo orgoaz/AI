@@ -96,10 +96,11 @@ class AStar:
 
     # Reconstruct the path from a given goal by its parent and so on
     def _reconstructPath(self, parents, goal):
-        path =[goal]
+        path = []
         currentStep = goal
-        while parents.__contains__(currentStep):
-            currentStep = parents[currentStep]
-            path.append(currentStep)
 
-        return list(reversed(path))
+        while currentStep is not None:
+            path.insert(0, currentStep)
+            currentStep = parents.get(currentStep)
+
+        return path
