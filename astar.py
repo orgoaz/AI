@@ -62,8 +62,9 @@ class AStar:
                 self._storeInCache(problem, result)
                 return result
 
+            developed += 1
+
             for s,c in problem.expandWithCosts(next, self.cost):
-                developed += 1
                 new_g = g_score[next] + c
                 new_h = self.heuristic.estimate(problem, s)
                 new_f = new_g + new_h

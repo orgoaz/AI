@@ -16,8 +16,8 @@ class TSPCustomHeuristic(Heuristic):
         orders = problem.orders
         
         # h_e
-        h_a = max(orders.map(lambda o: self._cost(o[0], o[1])))
-        h_d = max(orders.map(lambda o: self._cost(idx, o[0])))
+        h_a = max(map(lambda o: self._cost(o[0], o[1]), orders))
+        h_d = max(map(lambda o: self._cost(idx, o[0]), orders))
         return h_a + h_d
 
     def _cost(self, source, target):

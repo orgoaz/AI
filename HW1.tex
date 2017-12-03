@@ -192,7 +192,7 @@ Since there are $5$ orders in this problem set, we can use the table we calculat
 \subsubsection*{23. Bus A* Experiment}
 Greedy result: 135.06km \\~\\
 Stochastic (200 repetitions): 127.291km \\~\\
-A* (null heuristic):    g(G)=127.29km, h(I)=0.00km, developed: 5987 states \\~\\
+A* (null heuristic):    g(G)=127.29km, h(I)=0.00km, developed: 1640 states \\~\\
 
 \subsubsection*{24. Comparison of Heuristics}
 \subsubsection*{Non Admissable Heuristics}
@@ -255,10 +255,16 @@ Assuming \textbf{non-strict} admissability, we can conclude that
 \textbf{Note:} If we were to address \textbf{strict} admissability, since the case that there is only one passenger left to pickup $h_a = h_b$, and in the case that the real distances are aerial distances $h_a = h_f$ (and transetively in both cases $h_a = h_f$), the only better informed heursitic would be $h_e$ over all the others (since we have to pick the passenger up ($(s_i,  t_i) \in s.W$) and the invarient that $s_i \neq t_i$
 
 \subsubsection*{25. Using an admissable Heuristic}
-dsadsa
+We've implemented Heuristic E. \\~\\
+The distance is the same (127.29km). \\~\\
+The distance from the initial state to a goal state was estimated by 40.78km. \\~\\
+1662 states were developed \emph{(This makes sense since when $|W| = 0$ our heuristic is the same as the null heuristic, but it developed more routes beforehand)}
 
 \subsubsection*{26. Using an advanced Heuristic}
-dsadsa
+The distance is the same (127.29km). \\~\\
+The distance from the initial state to a goal state was estimated by 81.34km. \\~\\
+475 states were developed
+
 
 \section*{Theory}
 \subsection*{Proof of transitive admissability}
