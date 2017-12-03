@@ -1,3 +1,6 @@
+import os, sys
+sys.path.insert(0, os.getcwd())
+
 import numpy as np
 import random
 from matplotlib import pyplot as plt

@@ -1,3 +1,4 @@
+import os
 import numpy as np
 
 class Consts:
@@ -5,7 +6,7 @@ class Consts:
     STOCH_TEMPERATURE_DECAY_FUNCTION = 0.95
     STOCH_TOP_SCORES_TO_CONSIDER = 5
 
-    DATA_PATH = "../db/"
+    DATA_PATH = "./db/" if os.name == "posix" else "../db/"
 
     @staticmethod
     def getDataFilePath(fileName):

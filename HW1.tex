@@ -3,7 +3,8 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{amsmath}
-
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \begin{document}
 
@@ -292,6 +293,20 @@ It is obvious that $h_{tree}$ is more informed, since it is equal to $h$ in the 
 \\~\\
 \textbf{Note: } We are using the weaker constraint, only since the question isn't possible to answer using the usual constraint --- since $h$ may be optimal when defined.
 \\~\\
+
+\begin{algorithm}
+\caption{Pseudo Code for Heuristic}
+\begin{algorithmic}[1]
+\Procedure{heuristic}{$h, state$}
+\If {h.isApplicableTo(state)} \Comment{just use partial heuristic}
+	\State \textbf{return} $h(s)$
+\EndIf
+\State
+\State \textbf{return} \emph{Uniform-Cost}$(s, goal\_predicate)$
+\Comment{use UC}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
 \subsection*{A generic better heuristic!}
 Actually, the previous heuristic still works, since we know the cost function has a positive minimal constraint.
