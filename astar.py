@@ -54,12 +54,14 @@ class AStar:
         while open_set != {}:
             next = self._getOpenStateWithLowest_f_score(open_set)[0]
             closed_set.add(next)
+
             if problem.isGoal(next):
                 path = self._reconstructPath(parents, next)
                 result = (path, g_score[next], hi, developed)
 
                 self._storeInCache(problem, result)
                 return result
+
             for s,c in problem.expandWithCosts(next, self.cost):
                 developed += 1
                 new_g = g_score[next] + c
@@ -69,18 +71,16 @@ class AStar:
                 is_open = open_set.__contains__(s)
                 is_closed = closed_set.__contains__(s)
 
-                if is_open or is_closed:
-                    if new_g < g_score[s]:
-                        g_score[s] = new_g
-                        parents[s] = next
-                        open_set[s] = new_f
+                is_new = not (is_open or is_closed)
+                is_better = (not is_new) and new_g < g_score[s]
 
-                        if is_closed:
-                            closed_set.remove(s)                            
-                else:
+                if is_new or is_better:
                     g_score[s] = new_g
                     parents[s] = next
-                    open_set[s] = new_f
+                    open_set[s] = new_f  
+                
+                if is_better and is_closed:
+                    closed_set.remove(s)                                              
 
         raise ValueError('No Path Found - I worked for nothing :(')
 
