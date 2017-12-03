@@ -20,7 +20,7 @@ class TSPCustomHeuristic(Heuristic):
         h_d = max(orders.map(lambda o: self._cost(idx, o[0])))
         return h_a + h_d
 
-    def _cost(self, source, target:
+    def _cost(self, source, target):
         coord1 = self._roads[source].coordinates
         coord2 = self._roads[target].coordinates
 
