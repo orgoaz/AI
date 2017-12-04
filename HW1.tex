@@ -107,28 +107,36 @@ Is goal? False
 
 \subsection*{A*}
 \subsubsection*{11. A* Experiment}
-dsadsa
+In code files. \\
+
+\underline{ output:} \\
+\includegraphics{astar_output} \\
+Shortest distance for order from \#32056 to \#834603: 7.15km \\
+Shortest distance for order from \#47521 to \#606430: 22.34km\\
+Shortest distance for order from \#466524 to \#29249: 20.30km\\
+Shortest distance for order from \#23695 to \#33320: 11.28km\\
+Shortest distance for order from \#851288 to \#533396: 16.28km\\
+Total distance: 77.35km
 
 \subsubsection*{12. Conclusions on the sum of routes}
-dsakldnaslk \\ 
 
-not minimal – if all in same place…  \\
-probably not maximal – if all different, it doesn’t count $t+i->s_i+1$ \\
+-Not lower bound– if all the nodes in same place (start and destination) it suppose to be smaller (Need to take only 1 distance in calculation)   \\
+-Not upper bound – if all different , The calculation doesn't count the distance between nodes that belong to different passengers \\\\
+So, the bound cannot be determined in generally.
 
-dsakldsal \\
 
 \subsection*{Greedy Algorithm}
-\subsubsection*{13. Greedy Algorithm Experiment}
-dsadsa
-\begin{table}[]
+\subsubsection*{13. Greedy Algorithm Experiment} 
+table of distances:
+\begin{table}[htb]
 \begin{center}
 \begin{tabular}{l l}
 \hline
 \textbf{Input FIle} & \textbf{Solution cost (total distance in KM)} \\ \hline
-TLV\_5 & dsadsa \\ \hline
-SDEROT\_50 & dsadsa \\ \hline
-HAIFA\_100 & dsadsa \\ \hline
-BEER\_SHEVA\_100 & dsadsa \\ 
+TLV\_5 & 135.06km \\ \hline
+SDEROT\_50 & 539.59km \\ \hline
+HAIFA\_100 & 565.68km \\ \hline
+BEER\_SHEVA\_100 & 1329.21km \\ 
 \hline\hline
 \end{tabular}
 \end{center}
@@ -159,7 +167,10 @@ $$
 which is just the original, unnormalized probability!s
 
 \subsubsection*{17. Temprature Experiment}
-dsadsa
+In code files. \\
+
+\underline{ output:} \\
+\includegraphics{temperature} \\
 
 \subsubsection*{18. Implications of $T \rightarrow 0$}
 In this case, the algorithm would be conservative and choose (almost determinstically - this would happen when $T=0$) the best score each time - as did the greedy algorithm!
@@ -180,10 +191,17 @@ $$
 This would make the score of each of the best $N$ points to the equal to $\frac {1} {N}$, Thus making the algorithm choose completely randomly!
 
 \subsubsection*{20. Stochastic Algorithm Experiment}
-dsadsa
+In code files. \\
+\includegraphics{stochastic_vs_deterministic} \\
 
 \subsubsection*{21. T-Test assumption verification}
-dsadsa
+output:\\
+The mean value is  1299.95718667\\
+The standard deviation is  58.510096707\\
+The p-value is  8.62672490597e-09\\\\
+The meaning of p-value=8.62672490597e-09 is that if the null hypothesis is true, we will get that smaple in 8 of 1000000000 experiments.(very very rare)\\
+By the p-value, the null hypothesis needs to be rejected.\\\\
+The value of the deterministic greedy, is far from the mean value,with the range of the standard deviation. So, intuitively, the null hypothesis needs to be rejected because of the big gap between the value to the range of (mean minus standard deviation, mean plus standard deviation)
 
 \subsection*{A* (Again)}
 \subsubsection*{22. Number of routes to \emph{any} Goal State}
