@@ -6,7 +6,9 @@ import random
 from matplotlib import pyplot as plt
 
 N = 5
-X = np.array([400,900,390,1000,550])
+X = np.array([400,450,900,390,1000,550])
+inds = X.argsort()[:N]
+X = X[inds]
 
 alpha = np.min(X)
 Xh = X / alpha
@@ -21,10 +23,12 @@ P /= denom[:,None]
 
 plt.plot(P)
 axes = plt.gca()
+axes.grid(True)
 axes.set_xticklabels(range(N+1))
 axes.set_xlabel("T")
 axes.set_ylabel("P")
 axes.set_xlim([0,100])
 axes.set_ylim([0,1])
+plt.title("Temperature probability as function of T")
 plt.legend(X, loc="upper right")
 plt.show()
